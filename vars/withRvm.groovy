@@ -1,5 +1,3 @@
-RVM_HOME = '$HOME/.rvm'
-
 def call(String version, Closure cl) {
     withRvm(version, "executor-${env.EXECUTOR_NUMBER}") {
         cl()
@@ -7,6 +5,7 @@ def call(String version, Closure cl) {
 }
 
 def call(String version, String gemset, Closure cl) {
+    final RVM_HOME = '$HOME/.rvm'
     paths = [
         "$RVM_HOME/gems/$version@$gemset/bin",
         "$RVM_HOME/gems/$version@global/bin",
