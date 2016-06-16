@@ -1,8 +1,4 @@
-def call(String step_name, int ci_node_total, Closure cl) {
-  call(step_name, ci_node_total, null, cl)
-}
-
-def call(String step_name, int ci_node_total, String label, Closure cl) {
+def call(String step_name, int ci_node_total, String label = null, Closure cl) {
   def nodes = [:]
 
   for(int i = 0; i < ci_node_total; i++) {
