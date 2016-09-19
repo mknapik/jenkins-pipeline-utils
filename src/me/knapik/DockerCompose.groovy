@@ -76,7 +76,7 @@ class DockerCompose implements Serializable {
         String tmpFile = ".jenkins_gid_${uuid()}"
         try {
             script.sh "id -g > $tmpFile"
-            return Intger.parseInt(script.readFile(tmpFile).trim())
+            return Integer.parseInt(script.readFile(tmpFile).trim())
         } finally {
             script.sh "rm -f $tmpFile"
         }
