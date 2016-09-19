@@ -15,12 +15,12 @@ class DockerCompose implements Serializable {
     }
 
     def createLocalUser(String service) {
-        execRoot(service, "addgroup --quiet --gid ${getGid()} ${getGroup()}")
-        execRoot(service, "adduser  --quiet --no-create-home --disabled-password --gecos '' `whoami` --uid ${getUid()} --gid ${getGid()}")
+        execRoot(service, "addgroup --quiet --gid ${fetchGid()} ${fetchGroup()}")
+        execRoot(service, "adduser  --quiet --no-create-home --disabled-password --gecos '' `whoami` --uid ${fetchUid()} --gid ${fetchGid()}")
     }
 
     def exec(String service, String cmd) {
-        exec(service, getUid(), cmd)
+        exec(service, fetchUid(), cmd)
     }
 
     def execRoot(String service, String cmd) {
@@ -41,32 +41,32 @@ class DockerCompose implements Serializable {
         script.sh "docker-compose -p $projectName down --rmi local"
     }
 
-    private Integer getUid() {
-        if(uid != null) {
-            return uid
+    private Integer fetchUid() {
+        if(uid == null) {
+            this.uid = detectUid()
         }
-        this.uid = detectUid()
+        return uid
     }
 
-    private Integer getGid() {
-        if(gid != null) {
-            return gid
+    private Integer fetchGid() {
+        if(gid == null) {
+            this.gid = detectGid()
         }
-        this.gid = detectGid()
+        return gid
     }
 
-    private String getGroup() {
-        if(group != null) {
-            return group
+    private String fetchGroup() {
+        if(group == null) {
+            this.group = detectGroup()
         }
-        this.group = detectGroup()
+        return group
     }
 
     private Integer detectUid() {
         String tmpFile = ".jenkins_uid_${uuid()}"
         try {
             script.sh "id -u > $tmpFile"
-            Integer.parseInt(script.readFile(tmpFile).trim())
+            return Integer.parseInt(script.readFile(tmpFile).trim())
         } finally {
             script.sh "rm -f $tmpFile"
         }
@@ -76,7 +76,7 @@ class DockerCompose implements Serializable {
         String tmpFile = ".jenkins_gid_${uuid()}"
         try {
             script.sh "id -g > $tmpFile"
-            Intger.parseInt(script.readFile(tmpFile).trim())
+            return Intger.parseInt(script.readFile(tmpFile).trim())
         } finally {
             script.sh "rm -f $tmpFile"
         }
@@ -85,8 +85,8 @@ class DockerCompose implements Serializable {
     private String detectGroup() {
         String tmpFile = ".jenkins_group_${uuid()}"
         try {
-            script.sh "getent group ${getGid()} | cut -d: -f1 > $tmpFile"
-            script.readFile(tmpFile).trim()
+            script.sh "getent group ${fetchGid()} | cut -d: -f1 > $tmpFile"
+            return script.readFile(tmpFile).trim()
         } finally {
             script.sh "rm -f $tmpFile"
         }
