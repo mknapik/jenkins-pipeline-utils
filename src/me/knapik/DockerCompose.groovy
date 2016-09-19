@@ -15,8 +15,8 @@ class DockerCompose implements Serializable {
     }
 
     def createLocalUser(String service) {
-        exec(service, "addgroup --quiet --gid ${getGid()} ${getGroup()}")
-        exec(service, "adduser  --quiet --no-create-home --disabled-password --gecos '' `whoami` --uid ${getUid()} --gid ${getGid()}")
+        execRoot(service, "addgroup --quiet --gid ${getGid()} ${getGroup()}")
+        execRoot(service, "adduser  --quiet --no-create-home --disabled-password --gecos '' `whoami` --uid ${getUid()} --gid ${getGid()}")
     }
 
     def exec(String service, String cmd) {
