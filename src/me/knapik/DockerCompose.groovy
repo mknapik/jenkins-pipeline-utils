@@ -27,6 +27,10 @@ class DockerCompose implements Serializable {
         exec(service, 'root', cmd)
     }
 
+    def exec(String service, Integer uid, String cmd) {
+        exec(service, uid.toString(), cmd)
+    }
+
     def exec(String service, String user, String cmd) {
         script.sh """
             docker-compose -p $projectName exec --user $user -T $service bash -c "$cmd"
