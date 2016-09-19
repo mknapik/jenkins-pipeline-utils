@@ -1,6 +1,6 @@
 package me.knapik
 
-import org.jenkinsci.plugins.workflow.cps
+import org.jenkinsci.plugins.workflow.cps.CpsScript
 
 class DockerCompose implements Serializable {
     private final String projectName;
