@@ -23,7 +23,7 @@ class DockerCompose implements Serializable {
         exec(service, getUid(), cmd)
     }
 
-    def exec(String service, String cmd) {
+    def execRoot(String service, String cmd) {
         exec(service, 'root', cmd)
     }
 
