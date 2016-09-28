@@ -1,5 +1,5 @@
 def call(Closure cl) {
-    stage 'docker-compose up'
+    echo 'docker-compose up'
     def compose = new me.knapik.DockerCompose("${env.EXECUTOR_NUMBER}", this)
 
     withEnv(["TMPDIR=${env.TMPDIR == null ? '/tmp' : env.TMPDIR}"]) {
@@ -8,7 +8,7 @@ def call(Closure cl) {
 
             cl(compose)
         } finally {
-            stage 'docker-compose down'
+            echo 'docker-compose down'
             compose.down()
         }
     }
