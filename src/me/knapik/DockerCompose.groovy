@@ -37,6 +37,20 @@ class DockerCompose implements Serializable {
         """
     }
 
+    def within(Closure cl) {
+        script.withEnv(["HOST_UID=${fetchUid()}"]) {
+            try {
+                script.echo 'docker-compose up'
+                up()
+
+                cl(this)
+            } finally {
+                script.echo 'docker-compose down'
+                down()
+            }
+        }
+    }
+
     def up() {
         script.sh "docker-compose -p $projectName up -d"
     }
