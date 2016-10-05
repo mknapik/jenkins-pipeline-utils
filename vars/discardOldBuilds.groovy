@@ -1,4 +1,4 @@
-def call(Map<String, Integer> args) {
+def call(Map<String, Integer> args = [:]) {
     def daysToKeepStr = "${args.days ?: 100}"
     def numToKeepStr = "${args.num ?: 30}"
     // artifactDaysToKeepStr: '0', artifactNumToKeepStr: '0', 
