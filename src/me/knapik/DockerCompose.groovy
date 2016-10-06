@@ -4,6 +4,7 @@ import org.jenkinsci.plugins.workflow.cps.CpsScript
 
 class DockerCompose implements Serializable {
     private final String projectName;
+    private final String serviceName;
     private CpsScript script;
     private Integer uid;
     private Integer gid;
@@ -12,6 +13,13 @@ class DockerCompose implements Serializable {
     def DockerCompose(String projectName, CpsScript script) {
         this.projectName = projectName
         this.script = script
+        this.serviceName = ""
+    }
+
+    def DockerCompose(String projectName, String serviceName, CpsScript script) {
+        this.projectName = projectName
+        this.script = script
+        this.serviceName = serviceName
     }
 
     def createLocalUser(String service) {
@@ -52,7 +60,7 @@ class DockerCompose implements Serializable {
     }
 
     def up() {
-        script.sh "docker-compose -p $projectName up --build -d"
+        script.sh "docker-compose -p $projectName up --build -d $serviceName"
     }
 
     def down() {
