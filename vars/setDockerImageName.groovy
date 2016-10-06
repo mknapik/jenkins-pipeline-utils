@@ -5,7 +5,7 @@ def call() {
     } else {
         def tag = replaceUnallowedCharacters(env.BRANCH_NAME)
         def job_name = replaceUnallowedCharacters(env.JOB_NAME)
-        def image_name = job_name.replaceAll(/.${tag}^/, '')
+        def image_name = job_name.replaceAll(/.${tag}$/, '')
         env.DOCKER_IMAGE_TAG = tag
         env.DOCKER_IMAGE_NAME = image_name
     }
