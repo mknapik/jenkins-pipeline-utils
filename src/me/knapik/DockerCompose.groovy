@@ -52,7 +52,7 @@ class DockerCompose implements Serializable {
     }
 
     def up() {
-        script.sh "docker-compose -p $projectName up -d"
+        script.sh "docker-compose -p $projectName up --build -d"
     }
 
     def down() {
