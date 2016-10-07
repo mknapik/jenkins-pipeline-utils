@@ -1,3 +1,5 @@
+def isMasterBranch = env.BRANCH_NAME == 'master'
+
 node('master') {
     cleanWorkspace()
 
@@ -5,9 +7,11 @@ node('master') {
     checkout(scm)
     stash name: 'source'
 
-    stage 'Deploy'
-    dir("${env.HOME}/workflow-libs") {
-        unstash 'source'
+    if(isMasterBranch) {
+        stage name: 'Deploy', concurrency: 1
+        dir("${env.HOME}/workflow-libs") {
+            unstash 'source'
+        }
     }
 
     cleanWorkspace()
