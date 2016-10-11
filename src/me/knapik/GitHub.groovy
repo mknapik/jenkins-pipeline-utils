@@ -16,7 +16,7 @@ class GitHub implements Serializable {
                      allowUserInteraction: false,
                      requestProperties: ['Connection': 'close'])
 
-        def json = jsonParse(result)
+        def json = me.knapik.Json.parse(result)
 
         List<Integer> pullRequestIds = []
         List<String> targetBranchRefs = []
