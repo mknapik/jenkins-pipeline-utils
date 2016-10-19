@@ -7,14 +7,8 @@ class GitHub implements Serializable {
     @NonCPS
     static def findPullRequests(String jobName, String branchName, String githubAccessToken) {
         def (String owner, String repo) = jobName.split('/')
-        String head = "${owner}:${branchName}"
-
-        String result = new URL("https://api.github.com/repos/${owner}/${repo}/pulls?access_token=${githubAccessToken}&state=open&head=${head}").
-            getText(connectTimeout: 5000,
-                     readTimeout: 10000,
-                     useCaches: true,
-                     allowUserInteraction: false,
-                     requestProperties: ['Connection': 'close'])
+        
+        String result = findByIdOrBase(owner, repo, branchName, githubAccessToken)
 
         def json = me.knapik.Json.parse(result)
 
@@ -27,5 +21,48 @@ class GitHub implements Serializable {
         }
 
         return [pullRequestIds: pullRequestIds, targetBranchRefs: targetBranchRefs]
+    }
+    
+    @NonCPS
+    static def findByIdOrHead(String owner, String repo, String branchName, String githubAccessToken) {
+        def match = (branchName =~ /PR-([0-9]+)/)
+        return {
+            switch (match.count) {
+            case 0:
+                findByHead(owner, repo, branchName, githubAccessToken)
+                break
+            case 1:
+                Integer id = Integer.parseInt(match[0][1])
+                findById(owner, repo, id, githubAccessToken)
+                break
+            default:
+                assert false
+            }
+        }
+    }
+    
+    @NonCPS
+    static def findByHead(String owner, String repo, String branchName, String githubAccessToken) {
+        String head = "${owner}:${branchName}"
+
+        String result = get("https://api.github.com/repos/${owner}/${repo}/pulls?access_token=${githubAccessToken}&state=open&head=${head}")
+        return result
+    }
+
+    @NonCPS
+    static def findById(String owner, String repo, Integer id, String githubAccessToken) {
+        String result = get("https://api.github.com/repos/${owner}/${repo}/pulls/${id}")
+        return "[${result}]"
+    }
+
+    @NonCPS
+    static def get(String url) {
+        String result = new URL(url).
+            getText(connectTimeout: 5000,
+                    readTimeout: 10000,
+                    useCaches: true,
+                    allowUserInteraction: false,
+                    requestProperties: ['Connection': 'close'])
+        return result
     }
 }
