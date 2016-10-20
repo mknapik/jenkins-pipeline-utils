@@ -26,18 +26,15 @@ class GitHub implements Serializable {
     @NonCPS
     static def findByIdOrHead(String owner, String repo, String branchName, String githubAccessToken) {
         def match = (branchName =~ /PR-([0-9]+)/)
-        return {
-            switch (match.count) {
-            case 0:
-                findByHead(owner, repo, branchName, githubAccessToken)
-                break
-            case 1:
-                Integer id = Integer.parseInt(match[0][1])
-                findById(owner, repo, id, githubAccessToken)
-                break
-            default:
-                assert false
-            }
+
+        switch (match.count) {
+        case 0:
+            return findByHead(owner, repo, branchName, githubAccessToken)
+        case 1:
+            Integer id = Integer.parseInt(match[0][1])
+            return findById(owner, repo, id, githubAccessToken)
+        default:
+            assert false
         }
     }
     
