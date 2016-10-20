@@ -8,7 +8,7 @@ class GitHub implements Serializable {
     static def findPullRequests(String jobName, String branchName, String githubAccessToken) {
         def (String owner, String repo) = jobName.split('/')
         
-        String result = findByIdOrBase(owner, repo, branchName, githubAccessToken)
+        String result = findByIdOrHead(owner, repo, branchName, githubAccessToken)
 
         def json = me.knapik.Json.parse(result)
 
