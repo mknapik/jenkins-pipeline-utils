@@ -48,7 +48,7 @@ class GitHub implements Serializable {
 
     @NonCPS
     static def findById(String owner, String repo, Integer id, String githubAccessToken) {
-        String result = get("https://api.github.com/repos/${owner}/${repo}/pulls/${id}")
+        String result = get("https://api.github.com/repos/${owner}/${repo}/pulls/${id}?access_token=${githubAccessToken}")
         return "[${result}]"
     }
 
