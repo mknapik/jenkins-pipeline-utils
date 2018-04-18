@@ -45,8 +45,10 @@ class DockerCompose implements Serializable {
         """
     }
 
-    def within(Closure cl) {
-        script.withEnv(["HOST_UID=${fetchUid()}"]) {
+    def within(Closure cl) {    
+        def escapedBranchName = script.env.BRANCH_NAME.replaceAll(/[^a-zA-Z0-9_.-]/, '__')
+        def buildDockerTag = "${escapedBranchName}-${script.env.BUILD_ID}"
+        script.withEnv(["HOST_UID=${fetchUid()}", "BUILD_DOCKER_TAG=${buildDockerTag}"]) {
             try {
                 script.echo 'docker-compose up'
                 up()
