@@ -4,6 +4,12 @@ def call(String serviceName, Closure cl) {
     withinDockerCompose(compose, cl)
 }
 
+def call(Boolean build, Closure cl) {
+    def compose = new me.knapik.DockerCompose("${env.JOB_NAME}-${env.BUILD_NUMBER}-${env.EXECUTOR_NUMBER}", build, this)
+
+    withinDockerCompose(compose, cl)
+}
+
 def call(Closure cl) {
     def compose = new me.knapik.DockerCompose("${env.JOB_NAME}-${env.BUILD_NUMBER}-${env.EXECUTOR_NUMBER}", this)
 

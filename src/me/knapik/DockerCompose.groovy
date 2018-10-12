@@ -5,20 +5,28 @@ import org.jenkinsci.plugins.workflow.cps.CpsScript
 class DockerCompose implements Serializable {
     private final String projectName;
     private final String serviceName;
+    private final Boolean build;
     private CpsScript script;
     private Integer uid;
     private Integer gid;
     private String group;
 
+    def DockerCompose(String projectName, Boolean build, CpsScript script) {
+        this(projectName, "", build, script)
+    }
+
     def DockerCompose(String projectName, CpsScript script) {
-        this.projectName = projectName
-        this.script = script
-        this.serviceName = ""
+        this(projectName, "", true, script)
     }
 
     def DockerCompose(String projectName, String serviceName, CpsScript script) {
+        this(projectName, serviceName, true, script)
+    }
+
+    def DockerCompose(String projectName, String serviceName, Boolean build, CpsScript script) {
         this.projectName = projectName
         this.script = script
+        this.build = build
         this.serviceName = serviceName
     }
 
@@ -62,7 +70,8 @@ class DockerCompose implements Serializable {
     }
 
     def up() {
-        script.sh "docker-compose -p $projectName up --build -d $serviceName"
+        String build = this.build ? '--build' : ''
+        script.sh "docker-compose -p $projectName up ${build} -d $serviceName"
     }
 
     def down() {
