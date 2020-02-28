@@ -5,7 +5,7 @@ def call(String version, Closure cl) {
 }
 
 def call(String version, String gemset, Closure cl) {
-    final RVM_HOME = '$HOME/.rvm'
+    final RVM_HOME = "${env.HOME}/.rvm"
     paths = [
         "$RVM_HOME/gems/$version@$gemset/bin",
         "$RVM_HOME/gems/$version@global/bin",
